@@ -38,8 +38,8 @@ export default function Players() {
       {/* Header */}
       <div className="border-b border-slate-700 bg-slate-800/30 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-3">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <h1 className="text-2xl font-bold flex items-center gap-3" dir='rtl'>
               فريق النيكي ناكا لي جا يتناكا
             </h1>
             <div className="flex gap-2">
