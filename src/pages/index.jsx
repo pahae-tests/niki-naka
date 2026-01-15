@@ -46,8 +46,8 @@ export default function Home() {
       {/* Header */}
       <div className="border-b border-slate-700 bg-slate-800/30 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-3">
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+            <h1 className="text-2xl font-bold flex items-center gap-3" dir='rtl'>
               فريق النيكي ناكا لي جا يتناكا
             </h1>
             <div className="flex gap-2">
@@ -70,7 +70,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl md:mx-auto px-2 md:px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold">Match History</h2>
           {/* <button 
@@ -119,7 +119,7 @@ export default function Home() {
                     {match.goals.map((goal, idx) => (
                       <div key={idx} className="flex items-center gap-3 text-sm bg-slate-700/30 rounded-lg p-3">
                         <span className="text-slate-400">#{goal.num}</span>
-                        <img src={goal.scorer?.img} className='w-12 h-12' />
+                        <img src={goal.scorer?.img} className='w-12 h-12 rounded-full' />
                         <span className="font-medium">{goal.scorer?.name || 'Unknown'}</span>
                         {goal.assister && (
                           <>
