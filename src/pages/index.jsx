@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Trophy, Plus, Calendar, Target } from 'lucide-react';
+import { Trophy, Plus, Calendar, Target, Users } from 'lucide-react';
 
 export default function Home() {
   const [matches, setMatches] = useState([]);
@@ -30,39 +30,39 @@ export default function Home() {
     let them = Number(score.split("-")[1]);
     if (us > them) return "text-green-500";
     else if (us < them) return "text-red-600";
-    else return "text-gray-600";
+    else return "text-gray-400";
   }
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+      <div className="min-h-screen bg-black flex items-center justify-center">
         <div className="text-white text-xl">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
+    <div className="min-h-screen bg-black text-white">
       {/* Header */}
-      <div className="border-b border-slate-700 bg-slate-800/30 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-3" dir='rtl'>
+      <div className="border-b border-gray-800 bg-black/90 backdrop-blur-sm sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold flex items-center gap-3 bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent" dir='rtl'>
               فريق النيكي ناكا لي جا يتناكا
             </h1>
-            <div className="flex gap-2">
+            <div className="flex gap-2 w-full sm:w-auto">
               <button
                 onClick={() => router.push('/')}
-                className="px-4 py-2 rounded-lg bg-blue-600 flex items-center gap-2"
+                className="flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 flex items-center justify-center gap-2 text-sm sm:text-base font-medium"
               >
-                <Calendar size={18} />
+                <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" />
                 Matches
               </button>
               <button
                 onClick={() => router.push('/players')}
-                className="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors flex items-center gap-2"
+                className="flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
               >
-                <Target size={18} />
+                <Users size={16} className="sm:w-[18px] sm:h-[18px]" />
                 Players
               </button>
             </div>
@@ -70,36 +70,25 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="max-w-7xl md:mx-auto px-2 md:px-6 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Match History</h2>
-          {/* <button 
-            onClick={() => router.push('/addMatch10')}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-          >
-            <Plus size={20} />
-            Add Match
-          </button> */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+          <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent">
+            Match History
+          </h2>
         </div>
 
         {matches.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-slate-400 text-lg mb-4">No matches yet</p>
-            <button 
-              onClick={() => router.push('/addMatch')}
-              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
-            >
-              Add Your First Match
-            </button>
+            <p className="text-gray-400 text-base sm:text-lg mb-4">No matches yet</p>
           </div>
         ) : (
-          <div className="grid gap-4">
+          <div className="grid gap-3 sm:gap-4">
             {matches.map(match => (
-              <div key={match._id} className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700 hover:border-slate-600 transition-colors">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold mb-1">vs {match.opponent}</h3>
-                    <p className="text-slate-400 text-sm">
+              <div key={match._id} className="bg-gray-900/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-800 hover:border-gray-700 transition-colors">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-3">
+                  <div className="w-full sm:w-auto">
+                    <h3 className="text-lg sm:text-xl font-bold mb-1">vs {match.opponent}</h3>
+                    <p className="text-gray-400 text-xs sm:text-sm">
                       {new Date(match.date).toLocaleDateString('en-US', { 
                         year: 'numeric', 
                         month: 'long', 
@@ -107,32 +96,38 @@ export default function Home() {
                       })}
                     </p>
                   </div>
-                  <div className={`text-3xl font-bold ${getScoreColor(match.score)}`}>{match.score}</div>
+                  <div className={`text-2xl sm:text-3xl font-bold ${getScoreColor(match.score)} self-end sm:self-auto`}>
+                    {match.score}
+                  </div>
                 </div>
 
                 {match.goals && match.goals.length > 0 && (
-                  <div className="space-y-2 pt-4 border-t border-slate-700">
-                    <div className="flex items-center gap-2 text-sm text-slate-400 mb-2">
-                      <Target size={16} />
+                  <div className="space-y-2 pt-4 border-t border-gray-800">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-400 mb-2">
+                      <Target size={14} className="sm:w-[16px] sm:h-[16px]" />
                       Goals
                     </div>
                     {match.goals.map((goal, idx) => (
-                      <div key={idx} className="flex items-center gap-3 text-sm bg-slate-700/30 rounded-lg p-3">
-                        <span className="text-slate-400">#{goal.num}</span>
-                        <img src={goal.scorer?.img} className='w-12 h-12 rounded-full' />
+                      <div key={idx} className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs sm:text-sm bg-gray-800/50 rounded-lg p-2.5 sm:p-3">
+                        <span className="text-gray-400">#{goal.num}</span>
+                        <img src={goal.scorer?.img} className='w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover' alt={goal.scorer?.name} />
                         <span className="font-medium">{goal.scorer?.name || 'Unknown'}</span>
                         {goal.assister && (
                           <>
-                            <span className="text-slate-500">•</span>
-                            <span className="text-slate-400">Assist: {goal.assister.name}</span>
+                            <span className="text-gray-500 hidden sm:inline">•</span>
+                            <span className="text-gray-400 w-full sm:w-auto">
+                              Assist: {goal.assister.name}
+                            </span>
                           </>
                         )}
-                        {goal.pen && (
-                          <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs">PEN</span>
-                        )}
-                        {goal.ongoal && (
-                          <span className="px-2 py-0.5 bg-green-500/20 text-green-400 rounded text-xs">ON GOAL</span>
-                        )}
+                        <div className="flex gap-2 w-full sm:w-auto">
+                          {goal.pen && (
+                            <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs font-medium">PEN</span>
+                          )}
+                          {goal.ongoal && (
+                            <span className="px-2 py-0.5 bg-green-500/20 text-green-400 rounded text-xs font-medium">ON GOAL</span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
