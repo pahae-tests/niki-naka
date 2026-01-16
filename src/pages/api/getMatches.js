@@ -3,7 +3,7 @@ import Match from './_Match';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    return res.status(405).json({ error: 'Method not allowed' }); 
   }
 
   try {
@@ -68,3 +68,4 @@ export default async function handler(req, res) {
     res.status(400).json({ success: false, error: error.message });
   }
 }
+
