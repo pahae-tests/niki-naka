@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Trophy, Plus, Calendar, Target, Zap, Icon, Crown } from 'lucide-react';
-import { soccerBall, sneaker } from '@lucide/lab';
+import { soccerBall, sneaker } from '@lucide/lab'; 
 
 export default function Home() {
   const [matches, setMatches] = useState([]);
@@ -238,3 +238,4 @@ export default function Home() {
     </div>
   );
 }
+
