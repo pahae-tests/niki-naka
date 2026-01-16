@@ -22,12 +22,11 @@ export default async function handler(req, res) {
         match.goals.forEach(goal => {
           if (goal.scorer.toString() === playerId) {
             goals++;
-            gamesPlayed.add(match._id.toString());
           }
           if (goal.assister && goal.assister.toString() === playerId) {
             assists++;
-            gamesPlayed.add(match._id.toString());
           }
+          gamesPlayed.add(match._id.toString());
         });
       });
 
