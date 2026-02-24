@@ -93,12 +93,14 @@ export default function Home() {
   };
 
   const getPlayerInfos = (name) => {
-    const player = matchLineups.players.find(p => p.name === name) || {};
+    const player = matchLineups.players?.find(p => p.name === name) || {};
+    const isAbsent = matchLineups.absentPlayers?.some(a => a.name === name);
+
     return {
       goals: player.goals || 0,
       assists: player.assists || 0,
       rating: player.rating || 0,
-      isAbsent: matchLineups.absentPlayers?.some(a => a.name === name)
+      isAbsent: isAbsent
     };
   };
 
