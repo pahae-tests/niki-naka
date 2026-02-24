@@ -12,7 +12,8 @@ const MatchSchema = new mongoose.Schema({
   opponent: { type: String, required: true },
   score: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  goals: [GoalSchema]
+  goals: [GoalSchema],
+  playersPresent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
 }, { timestamps: true });
 
 export default mongoose.models.Match || mongoose.model('Match', MatchSchema);
