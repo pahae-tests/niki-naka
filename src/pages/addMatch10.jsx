@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Trophy, Plus, X, ArrowLeft, Check, User } from 'lucide-react';
+import { Trophy, Plus, X, ArrowLeft } from 'lucide-react';
 
 export default function AddMatch() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function AddMatch() {
     score: '',
     date: new Date().toISOString().split('T')[0],
     goals: [],
-    playersPresent: [], // Nouvelle propriété
+    absentPlayers: []
   });
 
   useEffect(() => {
@@ -33,16 +33,13 @@ export default function AddMatch() {
   const addGoal = () => {
     setNewMatch({
       ...newMatch,
-      goals: [
-        ...newMatch.goals,
-        {
-          num: newMatch.goals.length + 1,
-          scorer: '',
-          assister: '',
-          pen: false,
-          ongoal: false,
-        },
-      ],
+      goals: [...newMatch.goals, {
+        num: newMatch.goals.length + 1,
+        scorer: '',
+        assister: '',
+        pen: false,
+        ongoal: false
+      }]
     });
   };
 
@@ -60,12 +57,11 @@ export default function AddMatch() {
     setNewMatch({ ...newMatch, goals: updatedGoals });
   };
 
-  const togglePlayerPresence = (playerId) => {
-    const isPresent = newMatch.playersPresent.includes(playerId);
-    const updatedPlayersPresent = isPresent
-      ? newMatch.playersPresent.filter(id => id !== playerId)
-      : [...newMatch.playersPresent, playerId];
-    setNewMatch({ ...newMatch, playersPresent: updatedPlayersPresent });
+  const toggleAbsentPlayer = (playerId) => {
+    const updatedAbsentPlayers = newMatch.absentPlayers.includes(playerId)
+      ? newMatch.absentPlayers.filter(id => id !== playerId)
+      : [...newMatch.absentPlayers, playerId];
+    setNewMatch({ ...newMatch, absentPlayers: updatedAbsentPlayers });
   };
 
   const handleSubmit = async (e) => {
@@ -82,8 +78,9 @@ export default function AddMatch() {
           scorer: goal.scorer,
           assister: goal.assister || null,
           pen: goal.pen,
-          ongoal: goal.ongoal,
+          ongoal: goal.ongoal
         })),
+        absentPlayers: newMatch.absentPlayers
       };
 
       const res = await fetch('/api/addMatch', {
@@ -128,7 +125,6 @@ export default function AddMatch() {
         </div>
 
         <form onSubmit={handleSubmit} className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700 space-y-6">
-          {/* Opponent, Score, Date */}
           <div>
             <label className="block text-sm font-medium mb-2 text-slate-300">Opponent Team</label>
             <input
@@ -163,33 +159,6 @@ export default function AddMatch() {
             </div>
           </div>
 
-          {/* Players Present */}
-          <div>
-            <label className="block text-sm font-medium mb-3 text-slate-300">Players Present</label>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
-              {players.map((player) => (
-                <label
-                  key={player._id}
-                  className={`flex items-center gap-2 p-3 rounded-lg border cursor-pointer transition-colors ${
-                    newMatch.playersPresent.includes(player._id)
-                      ? 'bg-blue-600/20 border-blue-500'
-                      : 'bg-slate-700/30 border-slate-600 hover:bg-slate-600/30'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={newMatch.playersPresent.includes(player._id)}
-                    onChange={() => togglePlayerPresence(player._id)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                  />
-                  <User size={16} />
-                  <span className="text-sm">{player.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          {/* Goals */}
           <div>
             <div className="flex items-center justify-between mb-4">
               <label className="text-sm font-medium text-slate-300">Goals Scored</label>
@@ -276,6 +245,23 @@ export default function AddMatch() {
                 ))}
               </div>
             )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-2 text-slate-300">Absent Players</label>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {players.map(player => (
+                <label key={player._id} className="flex items-center gap-2 p-2 bg-slate-700/30 rounded-lg cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newMatch.absentPlayers.includes(player._id)}
+                    onChange={() => toggleAbsentPlayer(player._id)}
+                    className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="text-sm text-slate-300">{player.name}</span>
+                </label>
+              ))}
+            </div>
           </div>
 
           <button

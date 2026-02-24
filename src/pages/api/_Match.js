@@ -13,7 +13,7 @@ const MatchSchema = new mongoose.Schema({
   score: { type: String, required: true },
   date: { type: Date, default: Date.now },
   goals: [GoalSchema],
-  playersPresent: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
+  absentPlayers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player', default: [] }]
 }, { timestamps: true });
 
 export default mongoose.models.Match || mongoose.model('Match', MatchSchema);
