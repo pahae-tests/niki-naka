@@ -96,6 +96,9 @@ export default function Home() {
     const player = matchLineups.players?.find(p => p.name === name) || {};
     const isAbsent = matchLineups.absentPlayers?.some(a => a.name === name);
 
+    console.log("name = " + name);
+    console.log("absent players = " + matchLineups.absentPlayers);
+
     return {
       goals: player.goals || 0,
       assists: player.assists || 0,
@@ -255,4 +258,5 @@ export default function Home() {
     </div>
   );
 }
+
 
