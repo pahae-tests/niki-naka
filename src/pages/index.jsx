@@ -111,18 +111,18 @@ export default function Home() {
             <div className="relative w-full h-[40%] md:h-[80%] -translate-y-4 md:-translate-y-10 flex flex-col justify-evenly px-2">
               {/* Ligne 1 */}
               <div className="flex justify-evenly">
-                <Player img="/pahae.png" name="Pahae" number={11} {...getPlayerInfos("Pahae")} />
-                <Player img="/khali.png" name="Khali" number={10} {...getPlayerInfos("Khali")} />
+                {matchLineups.absentPlayers?.some(a => a.name === "pahae") && <Player img="/pahae.png" name="Pahae" number={11} {...getPlayerInfos("Pahae")} />}
+                {matchLineups.absentPlayers?.some(a => a.name === "khali") && <Player img="/khali.png" name="Khali" number={10} {...getPlayerInfos("Khali")} />}
               </div>
               {/* Ligne 2 */}
               <div className="flex justify-center md:-translate-y-4">
-                <Player img="/yosf.png" name="Yosf" number={7} {...getPlayerInfos("Yosf")} />
+                {matchLineups.absentPlayers?.some(a => a.name === "yosf") && <Player img="/yosf.png" name="Yosf" number={7} {...getPlayerInfos("Yosf")} />}
               </div>
               {/* Ligne 3 */}
               <div className="flex justify-evenly">
-                <Player img="/apdltif.png" name="Apdltif" number={4} {...getPlayerInfos("Apdltif")} />
-                <Player img="/paatrox.png" name="Paatrox" number={3} {...getPlayerInfos("Paatrox")} />
-                <Player img="/amine.png" name="Amine" number={2} {...getPlayerInfos("Amine")} />
+                {matchLineups.absentPlayers?.some(a => a.name === "apdltif") && <Player img="/apdltif.png" name="Apdltif" number={4} {...getPlayerInfos("Apdltif")} />}
+                {matchLineups.absentPlayers?.some(a => a.name === "paatrox") && <Player img="/paatrox.png" name="Paatrox" number={3} {...getPlayerInfos("Paatrox")} />}
+                {matchLineups.absentPlayers?.some(a => a.name === "amine") && <Player img="/amine.png" name="Amine" number={2} {...getPlayerInfos("Amine")} />}
               </div>
             </div>
           </div>
