@@ -3,7 +3,7 @@ import Match from './_Match';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' }); 
+    return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
@@ -11,6 +11,7 @@ export default async function handler(req, res) {
     let matches = await Match.find({})
       .populate('goals.scorer', 'name img')
       .populate('goals.assister', 'name img')
+      .populate('absentPlayers', 'name img')
       .sort({ date: -1 });
 
     matches = matches.map(match => {
@@ -58,14 +59,14 @@ export default async function handler(req, res) {
       return {
         ...match.toObject(),
         players,
-        mvp: players.find(p => p.rating === maxRating) || null
+        mvp: players.find(p => p.rating === maxRating) || null,
+        absentPlayers: match.absentPlayers
       };
     });
-    
+
     res.status(200).json({ success: true, data: matches });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(400).json({ success: false, error: error.message });
   }
 }
-
