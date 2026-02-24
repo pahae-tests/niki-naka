@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Trophy, Plus, Calendar, Target, Zap, Icon, Crown } from 'lucide-react';
-import { soccerBall, sneaker } from '@lucide/lab'; 
+import { soccerBall, sneaker } from '@lucide/lab';
 
 export default function Home() {
   const [matches, setMatches] = useState([]);
@@ -36,7 +36,7 @@ export default function Home() {
     else return "text-gray-600";
   }
 
-  const Player = ({ img, name, number, goals, assists, rating }) => {
+  const Player = ({ img, name, number, goals, assists, rating, isAbsent }) => {
     if (rating <= 0) rating = 5.0;
     if (rating > 10) rating = 10.0;
 
@@ -46,34 +46,48 @@ export default function Home() {
     else if (rating >= 6) ratingBg = "bg-yellow-400";
 
     return (
-      <div className="relative flex flex-col items-center">
-        <img src={img} className="w-8 h-8 md:w-14 md:h-14 rounded-full object-cover" />
+      <div
+        className={`relative flex flex-col items-center ${isAbsent ? "opacity-50 grayscale" : ""
+          }`}
+      >
+        <img
+          src={img}
+          className="w-8 h-8 md:w-14 md:h-14 rounded-full object-cover"
+        />
 
-        {goals > 0 && (
+        {!isAbsent && goals > 0 && (
           <div className="absolute top-0 left-0 -translate-x-1/3 -translate-y-1 w-4 h-2 md:w-7 md:h-4 flex items-center justify-around rounded-3xl bg-white border border-gray-300">
             <Icon iconNode={soccerBall} className="w-2 h-2 md:w-4 md:h-4 text-black" />
-            <span className="text-[6px] md:text-xs font-bold text-black">{goals}</span>
+            <span className="text-[6px] md:text-xs font-bold text-black">
+              {goals}
+            </span>
           </div>
         )}
 
-        {assists > 0 && (
+        {!isAbsent && assists > 0 && (
           <div className="absolute bottom-0 left-0 -translate-x-1/3 -translate-y-5 md:-translate-y-5.5 w-4 h-2 md:w-7 md:h-4 flex items-center justify-around rounded-3xl bg-white border border-gray-300">
             <Icon iconNode={sneaker} className="w-2 h-2 md:w-4 md:h-4 text-black" />
-            <span className="text-[6px] md:text-xs font-bold text-black">{assists}</span>
+            <span className="text-[6px] md:text-xs font-bold text-black">
+              {assists}
+            </span>
           </div>
         )}
 
-        <div
-          className={`absolute bottom-0 right-0 translate-x-1/3 -translate-y-5 w-4 h-2 md:w-7 md:h-5 flex items-center justify-center rounded-3xl text-white font-bold ${ratingBg} text-[6px] md:text-xs`}
-        >
-          {rating.toFixed(1)}
-        </div>
+        {!isAbsent && (
+          <div
+            className={`absolute bottom-0 right-0 translate-x-1/3 -translate-y-5 w-4 h-2 md:w-7 md:h-5 flex items-center justify-center rounded-3xl text-white font-bold ${ratingBg} text-[6px] md:text-xs`}
+          >
+            {rating.toFixed(1)}
+          </div>
+        )}
 
         <div className="absolute top-0 right-0 translate-x-1 -translate-y-1 w-3 h-3 md:w-4 md:h-4 text-black flex items-center justify-center rounded-full bg-white border border-gray-300 text-[6px] md:text-[12px] font-bold">
           {number}
         </div>
 
-        <p className="text-[10px] md:text-sm font-bold mt-1 md:mt-3">{name}</p>
+        <p className="text-[10px] md:text-sm font-bold mt-1 md:mt-3">
+          {name}
+        </p>
       </div>
     );
   };
@@ -83,7 +97,8 @@ export default function Home() {
     return {
       goals: player.goals || 0,
       assists: player.assists || 0,
-      rating: player.rating || 0
+      rating: player.rating || 0,
+      isAbsent: matchLineups.absentPlayers?.some(a => a.name === name)
     };
   };
 
@@ -111,18 +126,18 @@ export default function Home() {
             <div className="relative w-full h-[40%] md:h-[80%] -translate-y-4 md:-translate-y-10 flex flex-col justify-evenly px-2">
               {/* Ligne 1 */}
               <div className="flex justify-evenly">
-                {matchLineups.absentPlayers?.some(a => a.name === "pahae") && <Player img="/pahae.png" name="Pahae" number={11} {...getPlayerInfos("Pahae")} />}
-                {matchLineups.absentPlayers?.some(a => a.name === "khali") && <Player img="/khali.png" name="Khali" number={10} {...getPlayerInfos("Khali")} />}
+                <Player img="/pahae.png" name="Pahae" number={11} {...getPlayerInfos("Pahae")} />
+                <Player img="/khali.png" name="Khali" number={10} {...getPlayerInfos("Khali")} />
               </div>
               {/* Ligne 2 */}
               <div className="flex justify-center md:-translate-y-4">
-                {matchLineups.absentPlayers?.some(a => a.name === "yosf") && <Player img="/yosf.png" name="Yosf" number={7} {...getPlayerInfos("Yosf")} />}
+                <Player img="/yosf.png" name="Yosf" number={7} {...getPlayerInfos("Yosf")} />
               </div>
               {/* Ligne 3 */}
               <div className="flex justify-evenly">
-                {matchLineups.absentPlayers?.some(a => a.name === "apdltif") && <Player img="/apdltif.png" name="Apdltif" number={4} {...getPlayerInfos("Apdltif")} />}
-                {matchLineups.absentPlayers?.some(a => a.name === "paatrox") && <Player img="/paatrox.png" name="Paatrox" number={3} {...getPlayerInfos("Paatrox")} />}
-                {matchLineups.absentPlayers?.some(a => a.name === "amine") && <Player img="/amine.png" name="Amine" number={2} {...getPlayerInfos("Amine")} />}
+                <Player img="/apdltif.png" name="Apdltif" number={4} {...getPlayerInfos("Apdltif")} />
+                <Player img="/paatrox.png" name="Paatrox" number={3} {...getPlayerInfos("Paatrox")} />
+                <Player img="/amine.png" name="Amine" number={2} {...getPlayerInfos("Amine")} />
               </div>
             </div>
           </div>
