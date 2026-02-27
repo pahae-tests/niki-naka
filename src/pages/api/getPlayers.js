@@ -13,34 +13,46 @@ export default async function handler(req, res) {
     const matches = await Match.find({});
 
     const playersWithStats = players.map(player => {
-      const playerId = player._id.toString();
-      let gamesPlayed = new Set();
-      let goals = 0;
-      let assists = 0;
+  const playerId = player._id.toString();
 
-      matches.forEach(match => {
-        match.goals.forEach(goal => {
-          if (goal.scorer.toString() === playerId) {
-            goals++;
-          }
-          if (goal.assister && goal.assister.toString() === playerId) {
-            assists++;
-          }
-          gamesPlayed.add(match._id.toString());
-        });
-      });
+  let gamesPlayed = 0;
+  let goals = 0;
+  let assists = 0;
 
-      return {
-        _id: player._id,
-        name: player.name,
-        img: player.img,
-        stats: {
-          gamesPlayed: gamesPlayed.size,
-          goals,
-          assists,
-          ga: goals + assists
-        }
-      };
+  matches.forEach(match => {
+    const matchId = match._id.toString();
+
+    const isAbsent = match.absentPlayers.some(
+      absentId => absentId.toString() === playerId
+    );
+
+    // ✅ On ignore le match s'il était absent
+    if (!isAbsent) {
+      gamesPlayed++;
+    }
+
+    match.goals.forEach(goal => {
+      if (goal.scorer.toString() === playerId) {
+        goals++;
+      }
+      if (goal.assister && goal.assister.toString() === playerId) {
+        assists++;
+      }
+    });
+  });
+
+  return {
+    _id: player._id,
+    name: player.name,
+    img: player.img,
+    stats: {
+      gamesPlayed,
+      goals,
+      assists,
+      ga: goals + assists
+    }
+  };
+});
     });
 
     playersWithStats.sort((a, b) => b.stats.ga - a.stats.ga);
@@ -50,3 +62,4 @@ export default async function handler(req, res) {
     res.status(400).json({ success: false, error: error.message });
   }
 }
+
