@@ -44,7 +44,7 @@ export default async function handler(req, res) {
         }
 
         let rating = 5 + (goals * goalsCoef) + (assists * assistCoef);
-        let rr = rating;
+        let rr = Number(rating);
         if (rating > 10) rating = 10;
 
         return {
@@ -73,3 +73,4 @@ export default async function handler(req, res) {
   }
 
 }
+
