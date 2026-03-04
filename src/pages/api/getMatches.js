@@ -1,4 +1,4 @@
-import dbConnect from './_connect';
+٨import dbConnect from './_connect';
 import Match from './_Match';
 
 export default async function handler(req, res) {
@@ -44,12 +44,14 @@ export default async function handler(req, res) {
         }
 
         let rating = 5 + (goals * goalsCoef) + (assists * assistCoef);
+        let rr = rating;
         if (rating > 10) rating = 10;
 
         return {
           ...player,
           goals,
           assists,
+          rr,
           rating: Number(rating.toFixed(1)),
         };
       });
@@ -59,7 +61,7 @@ export default async function handler(req, res) {
       return {
         ...match.toObject(),
         players,
-        mvp: players.find(p => p.rating === maxRating) || null,
+        mvp: players.find(p => p.rr === maxRating) || null,
         absentPlayers: match.absentPlayers
       };
     });
@@ -69,4 +71,5 @@ export default async function handler(req, res) {
     console.log(error);
     res.status(400).json({ success: false, error: error.message });
   }
+
 }
