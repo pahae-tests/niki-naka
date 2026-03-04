@@ -56,7 +56,7 @@ export default async function handler(req, res) {
         };
       });
 
-      const maxRating = Math.max(...players.map(p => p.rating));
+      const maxRating = Math.max(...players.map(p => p.rr));
 
       return {
         ...match.toObject(),
@@ -73,5 +73,6 @@ export default async function handler(req, res) {
   }
 
 }
+
 
 
