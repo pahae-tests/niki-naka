@@ -1,4 +1,4 @@
-٨import dbConnect from './_connect';
+import dbConnect from './_connect';
 import Match from './_Match';
 
 export default async function handler(req, res) {
@@ -73,4 +73,5 @@ export default async function handler(req, res) {
   }
 
 }
+
 
