@@ -118,8 +118,8 @@ export default function AddMatch() {
               <ArrowLeft size={18} />
               Back
             </button>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent flex justify-center items-center">
-              {/* <Trophy size={22} /> */}
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent flex items-center gap-2">
+              <Trophy size={22} />
               Add New Match
             </h1>
             <div className="w-20" />
