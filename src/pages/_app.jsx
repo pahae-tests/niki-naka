@@ -13,7 +13,7 @@ export default function MyApp({ Component, pageProps }) {
                       فريق النيكي ناكا لي جا يتناكا
                     </h1>
                     <div className="flex gap-2 w-full sm:w-auto">
-                      {!router.pathname.includes('players') ? 
+                      {router.pathname.includes('players') ? 
                           <button
                             onClick={() => router.push('/')}
                             className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 font-medium flex items-center justify-center gap-2 text-sm sm:text-base text-white`}
