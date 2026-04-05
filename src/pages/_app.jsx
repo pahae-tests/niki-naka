@@ -1,6 +1,9 @@
 import styles from '../styles/globals.css'
+import { useRouter } from 'next/router'
+import { Trophy, Plus, Calendar, Target, Zap, Icon, Crown, Users } from 'lucide-react'
 
 export default function MyApp({ Component, pageProps }) {
+    const router = useRouter()
     return (
         <>
             <div className="border-b border-gray-800 bg-black/90 backdrop-blur-sm sticky top-0 z-10">
