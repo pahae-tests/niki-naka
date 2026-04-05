@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }) {
                     <div className="flex gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => router.push('/')}
-                        className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg ${router.pathname.includes('players') ? 'bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 font-medium' : 'underline'} flex items-center justify-center gap-2 text-sm sm:text-base text-white`}
+                        className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-lg ${!router.pathname.includes('players') ? 'bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 font-medium' : 'underline'} flex items-center justify-center gap-2 text-sm sm:text-base text-white`}
                       >
                         <Calendar size={16} className="sm:w-[18px] sm:h-[18px]" />
                         <span className="hidden sm:inline">Matches</span>
