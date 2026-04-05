@@ -122,7 +122,7 @@ export default function AddMatch() {
               <Trophy size={22} />
               Add New Match
             </h1>
-            <div className="w-20" />
+            {/* <div className="w-20" /> */}
           </div>
         </div>
       </div>
