@@ -5,7 +5,7 @@ import { Trophy, Plus, Calendar, Target, Zap, Icon, Crown, Users } from 'lucide-
 export default function MyApp({ Component, pageProps }) {
     const router = useRouter()
     return (
-        <>
+        <div className="bg-black">
             <div className="border-b border-gray-800 bg-black/60 backdrop-blur-sm sticky top-0 z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-between">
@@ -33,6 +33,6 @@ export default function MyApp({ Component, pageProps }) {
                 </div>
               </div>
             <Component {...pageProps} />
-        </>
+        </div>
     )
 }
