@@ -166,14 +166,14 @@ export default function EditMatch() {
       {/* Header */}
       <div className="border-b border-gray-800 bg-black">
         <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <button
+          <div className="flex items-center justify-center">
+            {/* <button
               onClick={() => router.push('/')}
               className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
             >
               <ArrowLeft size={18} />
               Back
-            </button>
+            </button> */}
             <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent flex items-center gap-2">
               <Trophy size={22} />
               Edit Match
