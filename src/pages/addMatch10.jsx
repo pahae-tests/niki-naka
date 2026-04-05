@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Trophy, Plus, X, ArrowLeft } from 'lucide-react';
+import { Trophy, Plus, X, ArrowLeft, Target, Zap, Users } from 'lucide-react';
 
 export default function AddMatch() {
   const router = useRouter();
@@ -22,9 +22,7 @@ export default function AddMatch() {
     try {
       const res = await fetch('/api/getPlayers');
       const data = await res.json();
-      if (data.success) {
-        setPlayers(data.data);
-      }
+      if (data.success) setPlayers(data.data);
     } catch (error) {
       console.error('Error fetching players:', error);
     }
@@ -51,9 +49,7 @@ export default function AddMatch() {
 
   const removeGoal = (index) => {
     const updatedGoals = newMatch.goals.filter((_, i) => i !== index);
-    updatedGoals.forEach((goal, i) => {
-      goal.num = i + 1;
-    });
+    updatedGoals.forEach((goal, i) => { goal.num = i + 1; });
     setNewMatch({ ...newMatch, goals: updatedGoals });
   };
 
@@ -67,10 +63,8 @@ export default function AddMatch() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const validGoals = newMatch.goals.filter(goal => goal.scorer);
-
       const matchData = {
         ...newMatch,
         goals: validGoals.map(goal => ({
@@ -82,22 +76,14 @@ export default function AddMatch() {
         })),
         absentPlayers: newMatch.absentPlayers
       };
-
       const res = await fetch('/api/addMatch', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(matchData),
       });
-
       const data = await res.json();
-
-      if (data.success) {
-        router.push('/');
-      } else {
-        alert('Error adding match: ' + data.error);
-      }
+      if (data.success) router.push('/');
+      else alert('Error adding match: ' + data.error);
     } catch (error) {
       console.error('Error adding match:', error);
       alert('Error adding match');
@@ -106,114 +92,145 @@ export default function AddMatch() {
     }
   };
 
+  // Live stats from current form state
+  const liveStats = players
+    .map(player => ({
+      ...player,
+      goals: newMatch.goals.filter(g => g.scorer === player._id).length,
+      assists: newMatch.goals.filter(g => g.assister === player._id).length,
+    }))
+    .filter(p => p.goals > 0 || p.assists > 0)
+    .sort((a, b) => (b.goals * 2 + b.assists) - (a.goals * 2 + a.assists));
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white p-6">
-      <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
-          >
-            <ArrowLeft size={20} />
-            Back
-          </button>
-          <h1 className="text-3xl font-bold flex items-center gap-3">
-            <Trophy className="text-blue-400" size={32} />
-            Add New Match
-          </h1>
-          <div className="w-20"></div>
+    <div className="min-h-screen bg-black text-white" style={{ fontFamily: "'DM Mono', monospace" }}>
+
+      {/* Top bar */}
+      <div className="sticky top-0 z-20 bg-black border-b border-zinc-900 px-6 py-4 flex items-center justify-between">
+        <button
+          onClick={() => router.push('/')}
+          className="flex items-center gap-2 text-zinc-500 hover:text-white transition-colors text-xs tracking-widest uppercase"
+        >
+          <ArrowLeft size={15} />
+          Back
+        </button>
+        <div className="flex items-center gap-2.5">
+          <Trophy size={16} className="text-amber-400" />
+          <span className="text-xs tracking-[0.3em] uppercase text-zinc-300">New Match</span>
         </div>
+        <div className="w-16" />
+      </div>
 
-        <form onSubmit={handleSubmit} className="bg-slate-800/50 backdrop-blur-sm rounded-xl p-6 border border-slate-700 space-y-6">
-          <div>
-            <label className="block text-sm font-medium mb-2 text-slate-300">Opponent Team</label>
-            <input
-              type="text"
-              value={newMatch.opponent}
-              onChange={(e) => setNewMatch({ ...newMatch, opponent: e.target.value })}
-              className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-              required
-            />
-          </div>
+      <div className="max-w-5xl mx-auto px-4 md:px-6 py-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-          <div className="grid grid-cols-2 gap-4">
+        {/* ── FORM (left 2/3) ── */}
+        <div className="lg:col-span-2 space-y-5">
+
+          {/* Match Info */}
+          <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-5 space-y-4">
+            <p className="text-xs tracking-[0.3em] uppercase text-zinc-600">Match Info</p>
+
             <div>
-              <label className="block text-sm font-medium mb-2 text-slate-300">Final Score</label>
+              <label className="text-xs text-zinc-600 tracking-widest uppercase block mb-1.5">Opponent</label>
               <input
                 type="text"
-                value={newMatch.score}
-                onChange={(e) => setNewMatch({ ...newMatch, score: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                value={newMatch.opponent}
+                onChange={(e) => setNewMatch({ ...newMatch, opponent: e.target.value })}
+                placeholder="e.g. FC Barcelona"
+                className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-lg focus:outline-none focus:border-amber-400 text-white placeholder-zinc-700 transition-colors text-sm"
                 required
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-2 text-slate-300">Match Date</label>
-              <input
-                type="date"
-                value={newMatch.date}
-                onChange={(e) => setNewMatch({ ...newMatch, date: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
-                required
-              />
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs text-zinc-600 tracking-widest uppercase block mb-1.5">Score</label>
+                <input
+                  type="text"
+                  value={newMatch.score}
+                  onChange={(e) => setNewMatch({ ...newMatch, score: e.target.value })}
+                  placeholder="3 — 1"
+                  className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-lg focus:outline-none focus:border-amber-400 text-white placeholder-zinc-700 transition-colors text-sm text-center font-bold tracking-widest"
+                  required
+                />
+              </div>
+              <div>
+                <label className="text-xs text-zinc-600 tracking-widest uppercase block mb-1.5">Date</label>
+                <input
+                  type="date"
+                  value={newMatch.date}
+                  onChange={(e) => setNewMatch({ ...newMatch, date: e.target.value })}
+                  className="w-full px-4 py-3 bg-black border border-zinc-800 rounded-lg focus:outline-none focus:border-amber-400 text-white transition-colors text-sm"
+                  required
+                />
+              </div>
             </div>
           </div>
 
-          <div>
+          {/* Goals */}
+          <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
-              <label className="text-sm font-medium text-slate-300">Goals Scored</label>
+              <div className="flex items-center gap-2">
+                <Target size={14} className="text-amber-400" />
+                <p className="text-xs tracking-[0.3em] uppercase text-zinc-600">Goals</p>
+                {newMatch.goals.filter(g => g.scorer).length > 0 && (
+                  <span className="px-2 py-0.5 bg-amber-400/10 text-amber-400 text-xs rounded-full border border-amber-400/20">
+                    {newMatch.goals.filter(g => g.scorer).length}
+                  </span>
+                )}
+              </div>
               <button
                 type="button"
                 onClick={addGoal}
-                className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors text-sm"
+                className="flex items-center gap-1.5 px-3 py-2 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 hover:border-zinc-600 rounded-lg transition-colors text-xs tracking-widest uppercase"
               >
-                <Plus size={16} />
+                <Plus size={13} />
                 Add Goal
               </button>
             </div>
 
             {newMatch.goals.length === 0 ? (
-              <div className="text-center py-8 bg-slate-700/20 rounded-lg border border-slate-600 border-dashed">
-                <p className="text-slate-400">No goals added yet</p>
+              <div className="text-center py-10 border border-dashed border-zinc-900 rounded-xl">
+                <Target size={26} className="mx-auto text-zinc-800 mb-2" />
+                <p className="text-zinc-700 text-xs tracking-widest">No goals added yet</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {newMatch.goals.map((goal, index) => (
-                  <div key={index} className="bg-slate-700/30 rounded-lg p-4 border border-slate-600">
+                  <div key={index} className="bg-black border border-zinc-900 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-medium text-slate-400">Goal #{goal.num}</span>
+                      <span className="text-xs text-amber-400 font-bold tracking-widest">GOAL #{goal.num}</span>
                       <button
                         type="button"
                         onClick={() => removeGoal(index)}
-                        className="text-red-400 hover:text-red-300 text-sm flex items-center gap-1"
+                        className="text-zinc-700 hover:text-red-400 transition-colors p-1"
                       >
-                        <X size={16} />
-                        Remove
+                        <X size={14} />
                       </button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
-                        <label className="block text-xs text-slate-400 mb-1">Scorer *</label>
+                        <label className="text-xs text-zinc-700 block mb-1">Scorer *</label>
                         <select
                           value={goal.scorer}
                           onChange={(e) => updateGoal(index, 'scorer', e.target.value)}
-                          className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white text-sm"
+                          className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg focus:outline-none focus:border-amber-400 text-white text-sm transition-colors"
                         >
-                          <option value="">Select player</option>
+                          <option value="">— Select —</option>
                           {players.map(p => (
                             <option key={p._id} value={p._id}>{p.name}</option>
                           ))}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-xs text-slate-400 mb-1">Assister</label>
+                        <label className="text-xs text-zinc-700 block mb-1">Assister</label>
                         <select
                           value={goal.assister}
                           onChange={(e) => updateGoal(index, 'assister', e.target.value)}
-                          className="w-full px-3 py-2 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white text-sm"
+                          className="w-full px-3 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg focus:outline-none focus:border-amber-400 text-white text-sm transition-colors"
                         >
-                          <option value="">None</option>
+                          <option value="">— None —</option>
                           {players.map(p => (
                             <option key={p._id} value={p._id}>{p.name}</option>
                           ))}
@@ -221,25 +238,23 @@ export default function AddMatch() {
                       </div>
                     </div>
 
-                    <div className="flex gap-4">
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={goal.pen}
-                          onChange={(e) => updateGoal(index, 'pen', e.target.checked)}
-                          className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-slate-300">Penalty</span>
-                      </label>
-                      <label className="flex items-center gap-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={goal.ongoal}
-                          onChange={(e) => updateGoal(index, 'ongoal', e.target.checked)}
-                          className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                        />
-                        <span className="text-sm text-slate-300">On Goal</span>
-                      </label>
+                    <div className="flex gap-5">
+                      {[['pen', 'Penalty'], ['ongoal', 'On Goal']].map(([field, label]) => (
+                        <label
+                          key={field}
+                          className="flex items-center gap-2 cursor-pointer group select-none"
+                          onClick={() => updateGoal(index, field, !goal[field])}
+                        >
+                          <div className={`w-4 h-4 rounded border flex items-center justify-center transition-all ${
+                            goal[field]
+                              ? 'bg-amber-400 border-amber-400'
+                              : 'border-zinc-700 bg-transparent group-hover:border-zinc-500'
+                          }`}>
+                            {goal[field] && <span className="text-black text-xs font-black leading-none">✓</span>}
+                          </div>
+                          <span className="text-xs text-zinc-500 group-hover:text-zinc-300 transition-colors">{label}</span>
+                        </label>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -247,31 +262,130 @@ export default function AddMatch() {
             )}
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2 text-slate-300">Absent Players</label>
+          {/* Absent Players */}
+          <div className="bg-zinc-950 border border-zinc-900 rounded-xl p-5">
+            <div className="flex items-center gap-2 mb-4">
+              <Users size={14} className="text-zinc-600" />
+              <p className="text-xs tracking-[0.3em] uppercase text-zinc-600">Absent Players</p>
+              {newMatch.absentPlayers.length > 0 && (
+                <span className="px-2 py-0.5 bg-red-500/10 text-red-400 text-xs rounded-full border border-red-500/20">
+                  {newMatch.absentPlayers.length}
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-              {players.map(player => (
-                <label key={player._id} className="flex items-center gap-2 p-2 bg-slate-700/30 rounded-lg cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={newMatch.absentPlayers.includes(player._id)}
-                    onChange={() => toggleAbsentPlayer(player._id)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-blue-600 focus:ring-2 focus:ring-blue-500"
-                  />
-                  <span className="text-sm text-slate-300">{player.name}</span>
-                </label>
-              ))}
+              {players.map(player => {
+                const absent = newMatch.absentPlayers.includes(player._id);
+                return (
+                  <label
+                    key={player._id}
+                    className={`flex items-center gap-2.5 p-3 rounded-lg cursor-pointer border transition-all select-none ${
+                      absent
+                        ? 'bg-red-950/20 border-red-900/60 text-red-400'
+                        : 'bg-black border-zinc-900 text-zinc-500 hover:border-zinc-700 hover:text-zinc-300'
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={absent}
+                      onChange={() => toggleAbsentPlayer(player._id)}
+                      className="hidden"
+                    />
+                    <div className={`w-3.5 h-3.5 rounded border flex-shrink-0 flex items-center justify-center transition-colors ${
+                      absent ? 'bg-red-500 border-red-500' : 'border-zinc-700'
+                    }`}>
+                      {absent && <span className="text-white text-xs font-black leading-none" style={{ fontSize: 9 }}>✕</span>}
+                    </div>
+                    <span className="text-xs truncate">{player.name}</span>
+                  </label>
+                );
+              })}
             </div>
           </div>
 
+          {/* Submit */}
           <button
-            type="submit"
+            onClick={handleSubmit}
             disabled={loading}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-600 disabled:cursor-not-allowed rounded-lg transition-colors font-medium"
+            className="w-full py-4 bg-amber-400 hover:bg-amber-300 active:bg-amber-500 disabled:bg-zinc-900 disabled:text-zinc-700 disabled:cursor-not-allowed rounded-xl transition-colors font-bold tracking-[0.2em] uppercase text-sm text-black"
           >
             {loading ? 'Saving...' : 'Save Match'}
           </button>
-        </form>
+        </div>
+
+        {/* ── LIVE STATS (right 1/3) ── */}
+        <div className="lg:col-span-1">
+          <div className="sticky top-20 bg-zinc-950 border border-zinc-900 rounded-xl overflow-hidden">
+
+            <div className="px-4 py-3 border-b border-zinc-900 flex items-center gap-2">
+              <Zap size={13} className="text-amber-400" />
+              <span className="text-xs tracking-[0.3em] uppercase text-zinc-600">Live Stats</span>
+            </div>
+
+            {liveStats.length === 0 ? (
+              <div className="px-4 py-12 text-center">
+                <Zap size={22} className="mx-auto text-zinc-800 mb-3" />
+                <p className="text-zinc-700 text-xs tracking-widest">Add goals to<br />see stats</p>
+              </div>
+            ) : (
+              <div className="divide-y divide-zinc-900">
+                {liveStats.map(player => (
+                  <div key={player._id} className="px-4 py-3 flex items-center gap-3">
+                    {/* Avatar */}
+                    <div className="w-9 h-9 rounded-full overflow-hidden bg-zinc-900 border border-zinc-800 flex-shrink-0 flex items-center justify-center">
+                      <img
+                        src={`/${player.name.toLowerCase()}.png`}
+                        alt={player.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <span
+                        className="w-full h-full items-center justify-center text-zinc-500 text-xs font-bold hidden"
+                        style={{ display: 'none' }}
+                      >
+                        {player.name[0].toUpperCase()}
+                      </span>
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs text-white font-medium truncate">{player.name}</p>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {player.goals > 0 && (
+                        <div className="flex items-center gap-1 px-2 py-1 bg-amber-400/10 rounded-md border border-amber-400/20">
+                          <Target size={9} className="text-amber-400" />
+                          <span className="text-xs text-amber-400 font-bold">{player.goals}</span>
+                        </div>
+                      )}
+                      {player.assists > 0 && (
+                        <div className="flex items-center gap-1 px-2 py-1 bg-blue-400/10 rounded-md border border-blue-400/20">
+                          <Zap size={9} className="text-blue-400" />
+                          <span className="text-xs text-blue-400 font-bold">{player.assists}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="px-4 py-3 border-t border-zinc-900 flex items-center gap-4">
+              <div className="flex items-center gap-1.5">
+                <Target size={9} className="text-amber-400" />
+                <span className="text-xs text-zinc-700">Goal</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <Zap size={9} className="text-blue-400" />
+                <span className="text-xs text-zinc-700">Assist</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
