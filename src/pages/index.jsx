@@ -149,33 +149,6 @@ export default function Home() {
         </div>
       }
 
-      {/* Header */}
-      <div className="border-b border-gray-800 bg-black">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            <h1 className="text-2xl font-bold flex items-center gap-3 bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent" dir='rtl'>
-              فريق النيكي ناكا لي جا يتناكا
-            </h1>
-            <div className="flex gap-2">
-              <button
-                onClick={() => router.push('/')}
-                className="px-4 py-2 rounded-lg bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 flex items-center gap-2 hover:opacity-90 transition-opacity"
-              >
-                <Calendar size={18} />
-                Matches
-              </button>
-              <button
-                onClick={() => router.push('/players')}
-                className="px-4 py-2 rounded-lg bg-gray-900 hover:bg-gray-800 transition-colors flex items-center gap-2 border border-gray-800"
-              >
-                <Target size={18} />
-                Players
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="max-w-7xl md:mx-auto px-2 md:px-6 py-8">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-2xl font-bold bg-gradient-to-r from-pink-600 via-purple-500 to-cyan-500 bg-clip-text text-transparent">Match History</h2>
