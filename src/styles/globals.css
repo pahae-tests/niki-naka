@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+body {
+    background: 'black';
+}
+
 button {
     cursor: pointer;
 }
