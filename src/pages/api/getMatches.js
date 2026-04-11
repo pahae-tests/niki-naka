@@ -32,7 +32,7 @@ export default async function handler(req, res) {
           if (g.assister?._id.toString() === player._id.toString()) assists++;
         });
 
-        let goalsCoef = 1.4, assistCoef = 1.1;
+        let goalsCoef = 1, assistCoef = 0.7;
         if (Math.abs(totalGoalsUs - totalGoalsThem) === 1) {
           if (match.goals[match.goals.length - 1]?.scorer?._id.toString() === player._id.toString()) {
             goalsCoef += 5 / totalGoalsUs;
